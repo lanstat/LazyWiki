@@ -1,0 +1,21 @@
+
+{
+  "name": "lazy-wiki",
+  "description": "Wiki minimalista portable",
+  "dependencies": {
+    "angular-latest": "latest",
+    "angular-route": "latest",
+    "angular-sanitize": "latest",
+    "angular-ui-bootstrap": "latest",
+    "bootstrap": "latest"
+  },
+  "authors": [
+    "Javier Garson Aparicio <lanstat@gmail.com>"
+  ],
+  "license": "Apache 2",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components"
+  ]
+}

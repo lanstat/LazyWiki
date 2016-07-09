@@ -1,0 +1,32 @@
+.wiki-article{
+    padding-right: 20px;
+}
+
+.wiki-article a{
+    cursor: pointer;
+}
+
+.wiki-article h2{
+    font-style: italic;
+    border-bottom: 1px solid black;
+}
+
+.wiki-article .thumb{
+    padding: 5px;
+    background-color: #f8f8f8;
+    border: 1px solid #e7e7e7;
+}
+
+.wiki-article h2 small{
+    font-style: normal;
+    font-size: 16px;
+}
+
+.wiki-article h3{
+    margin-bottom: 0px;
+    border-bottom: 1px solid black;
+}
+
+.cite-accessibility-label{
+    display: none;
+}
