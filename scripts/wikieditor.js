@@ -26,14 +26,16 @@ window.wikiEditor = {
 
         //Formateo
         response = response.replace(/'''''((\w|\s)+)'''''/g, '<b><i>$1</i></b>');
-        response = response.replace(/''((\w|\s)+)''/g, '<i>$1</i>');
-        response = response.replace(/'''((\w|\s)+)'''/g, '<b>$1</b>');
+        response = response.replace(/'''(.+?)'''/g, '<b>$1</b>');
+        response = response.replace(/''(.+?)''/g, '<i>$1</i>');
 
         //links
-        response = response.replace(/\[\[(.+?)\|thumb\|(.+?)[\]][\]]\n/g, this.parseThumb(response));
-        response = response.replace(/\[\[(.+?)\|(.+?)[\]][\]]/g, '<a href="#wiki/$1">$2</a>');
-        response = response.replace(/\[\[(.+?)[\]][\]]/g, '<a href="#wiki/$1">$1</a>');
-        response = response.replace(/\[(.+?)\s(.+?)[\]]/g, '<a href="$1">$2</a>');
+        response = this.parseLinks(response);
+
+        // response = response.replace(/\[\[(.+?)\|thumb\|(.+?)[\]][\]]\n/g, this.parseThumb(response));
+        // response = response.replace(/\[\[(.+?)\|(.+?)[\]][\]]/g, '<a href="#wiki3/$1">$2</a>');
+        // response = response.replace(/\[\[(.+?)[\]][\]]/g, '<a href="#wiki2/$1">$1</a>');
+        // response = response.replace(/\[(.+?)\s(.+?)[\]]/g, '<a href="$1">$2</a>');
 
         //Encabezado
         response = response.replace(/==(.+?)==/g, '<h3>$1</h3>');
@@ -81,6 +83,68 @@ window.wikiEditor = {
         response += 'First edition (publ. <a href="/wiki/Boni_%26_Liveright" title="Boni &amp; Liveright">Boni &amp; Liveright</a>)</div>';
         response += '</div>';
         response += '</div>';
+
+        return response;
+    },
+    parseLinks: function(content){
+        var response = content;
+        var links = [];
+
+        var pattern = /\[\[(.+?)[\]][\]]/g;
+        var match = pattern.exec(content);
+
+        while (match != null){
+            links.push(match[1]);
+            match = pattern.exec(content);
+        }
+
+        for(var i=0; i< links.length; i++){
+            response = response.replace('[['+links[i]+']]', function(cont){
+                var item = cont.split('|');
+                var resp = '';
+
+                if (item.length > 1){
+                    if (item[0].startsWith('File')){
+
+                    } else {
+                        resp = '<a href="#wiki/'+ item[0] +'">'+ item[1] +'</a>';
+                    }
+                }else{
+                    resp = '<a href="#wiki/'+ cont +'">'+ cont +'</a>';
+                }
+
+                return resp;
+            }(links[i]));
+        }
+        links = [];
+
+        pattern = /\[(.+?)[\]]/g;
+        match = pattern.exec(response);
+
+        while (match != null){
+            if(!parseInt(match[1])){
+                links.push(match[1]);
+            }
+            match = pattern.exec(response);
+        }
+
+        for(var i=0; i< links.length; i++){
+            response = response.replace('['+links[i]+']', function(cont){
+                var item = cont.split(' ');
+                var resp = '';
+
+                if (item.length > 1){
+                    var href = item[0];
+                    delete  item[0];
+
+                    resp = '<a href="'+ href +'">'+ item.join(' ') +'</a>';
+                }else{
+                    resp = '<a href="'+ cont +'">'+ cont +'</a>';
+                }
+
+                return resp;
+            }(links[i]));
+        }
 
         return response;
     }

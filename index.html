@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html ng-app="lazyWiki" lang="en">
+<html ng-app="lazyWiki" lang="es">
 <head>
     <meta charset="UTF-8">
     <title>LazyWiki</title>
@@ -21,7 +21,7 @@
             <div class="collapse navbar-collapse pull-right" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
                     <li class="active"><a href="#">Link <span class="sr-only">(current)</span></a></li>
-                    <li><a href="#">Link</a></li>
+                    <li><a ng-click="saveDatabase()">Guardar cambios</a></li>
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
                         <ul class="dropdown-menu">
@@ -69,14 +69,58 @@
 
     <script id="homeTpl" type="text/html">
         <h2>este es un template</h2>
-        <a href="#wiki">ver</a>
+        <a href="#wiki/is_5">ver</a>
     </script>
 
     <script id="articleTpl" type="text/html">
-        <div class="wiki-article">
-            <h2 class="wiki-title">{{title}}&nbsp;&nbsp;<small><a href="#/">[editar]</a></small></h2>
-            <small>De LazyWiki, mi wikipedia personal</small>
-            <div bind-html-compile="content"></div>
+        <div  class="wiki-article">
+            <div ng-if="!isNew">
+                <h2 class="wiki-title">{{title}}&nbsp;&nbsp;<small><a href="#/wiki/{{routeName}}/edit">[editar]</a></small></h2>
+                <small>De LazyWiki, mi wikipedia personal</small>
+                <br>
+                <div bind-html-compile="content"></div>
+            </div>
+            <div ng-if="isNew">
+                <h2>Agregar articulo</h2>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <form ng-submit="store()">
+                            <div class="form-group">
+                                <label for="txtTitle">Titulo</label>
+                                <input type="text" class="form-control" id="txtTitle" ng-model="formData.title">
+                            </div>
+                            <div class="form-group">
+                                <label for="txtContent">Contenido</label>
+                                <textarea class="form-control" id="txtContent" rows="15" ng-model="formData.content"></textarea>
+                                {{content}}
+                            </div>
+                            <button type="submit" class="btn btn-default">Guardar</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </script>
+
+    <script id="editArticleTpl" type="text/html">
+        <div  class="wiki-article">
+            <h2>Editar articulo</h2>
+            <div class="row">
+                <div class="col-sm-12">
+                    <form ng-submit="store()">
+                        <div class="form-group">
+                            <label for="txtTitle">Titulo</label>
+                            <input type="text" class="form-control" id="txtTitle" ng-model="formData.title">
+                        </div>
+                        <div class="form-group">
+                            <label for="txtContent">Contenido</label>
+                            <textarea class="form-control" id="txtContent" rows="15" ng-model="formData.content"></textarea>
+                            {{content}}
+                        </div>
+                        <button type="submit" class="btn btn-default">Guardar</button>
+                    </form>
+                </div>
+            </div>
         </div>
     </script>
 
