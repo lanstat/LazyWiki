@@ -44,18 +44,44 @@ window.WIKI = {
     },
     parseHeaders: function(content){
         var headers = [];
-        return content.replace(/==+(.+?)==+(\n|)/g, function(encountered){
+        var response = content.replace(/==+(.+?)==+(\n|)/g, function(encountered, title){
             var response = '';
-            encountered = encountered.trim();
+            title = title.trim();
             if (encountered.startsWith('====')){
-                response = '<h5>' + encountered.replace(/====/g, '') + '</h5>';
+                response = '<h5 id="'+ title.replace(/ /g, '_')+'">' + title + '</h5>';
+                headers.push({content: title, type: 3});
             }else if (encountered.startsWith('===')){
-                response = '<h4>' + encountered.replace(/===/g, '') + '</h4>';
+                response = '<h4 id="'+ title.replace(/ /g, '_')+'">' + title + '</h4>';
+                headers.push({content: title, type: 2});
             }else if (encountered.startsWith('==')){
-                response = '<h3>' + encountered.replace(/==/g, '') + '</h3>';
+                response = '<h3 id="'+ title.replace(/ /g, '_')+'">' + title + '</h3>';
+                headers.push({content: title, type: 1});
             }
+            if (headers.length == 1){
+                response = '-#$%Content%$#-' + response;
+            }
+
             return response;
         });
+
+        if (headers.length > 0){
+            var table = '<div id="toc" class="toc">';
+            table += '<div id="toctitle">';
+            table += '<h2>Contents</h2>';
+            table += '<ul style="display: block;">';
+
+            for (var i = 0; i < headers.length; i++){
+                if (headers[i].type == 1){
+                    table += '<li><a onclick="goTo(\'{2}\')"><span class="tocnumber">{0}</span> <span class="toctext">{1}</span></a></li>'
+                        .format(i+1, headers[i].content, headers[i].content.replace(/ /g, '_'));
+                }
+            }
+            table += '</ul></div></div>';
+
+            response = response.replace('-#$%Content%$#-', table);
+        }
+
+        return response;
     },
     parseRef: function(content, index){
         var response = '';
