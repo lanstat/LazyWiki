@@ -1,4 +1,4 @@
-var app = angular.module('lazyWiki',['ngRoute', 'ngSanitize', 'angular-bind-html-compile']);
+var app = angular.module('lazyWiki',['ngRoute', 'ngSanitize']);
 
 app.config(function($routeProvider){
     $routeProvider.
@@ -27,28 +27,32 @@ app.config(function($routeProvider){
 
 app.controller('mainController', function($scope){
     $scope.saveDatabase = function(){
-        var data = 'window.wikiDataBase={articles:';
+        var data = 'window.wikiDataBase={';
 
         var convertToString = function(item){
-            var response  = '{';
+            var count = 0;
+            var content  = '{';
             for (var param in item) {
                 if (item.hasOwnProperty(param)) {
                     if (typeof item[param] === 'object'){
-                        response += param + ':' + convertToString(item[param]);
+                        content += param + ':' + convertToString(item[param]).content;
                     }else{
                         var line = item[param].replace(/'/g,'\\\'');
                         line = line.replace(/\n/g, '\\n');
-                        response += param + ':\'' + line + '\'';
+                        content += param + ':\'' + line + '\'';
                     }
-                    response  += ',';
+                    content  += ',';
+                    count++;
                 }
             }
-            response = response.substring(0, response.length -1);
-            response += '}';
-            return response;
+            content = content.substring(0, content.length -1);
+            content += '}';
+            return {content: content, count: count};
         };
 
-        data += convertToString(wikiDataBase.articles) + '};';
+        var convert = convertToString(wikiDataBase.articles);
+
+        data += 'count:' + convert.count + ',articles:'+ convert.content + '};';
 
         var blob = new Blob([data], {type: 'application/javascript;charset=utf-8;'});
         var link = angular.element('<a></a>');
@@ -58,10 +62,8 @@ app.controller('mainController', function($scope){
     };
 });
 
-app.controller('menuController', function($scope){
+app.controller('menuController', function($scope, $location){
     $scope.navigation = [
-        {title:'Pagina principal', link:'#/'},
-        {title:'Pagina aleatoria', link:'#/'},
         {title:'Interaccion', items:[
             {title:'Ayuda', link:'#/'},
             {title:'Acerca de', link:'#/'}
@@ -70,19 +72,36 @@ app.controller('menuController', function($scope){
             {title:'Informacion de pagina', link:'#/'}
         ]}
     ];
+
+    $scope.getRandomPage = function(){
+        var seed = parseInt(Math.random() * wikiDataBase.count);
+        var index = 0;
+        var page = '';
+
+        for (var param in wikiDataBase.articles){
+            if (wikiDataBase.articles.hasOwnProperty(param)) {
+                if(seed == index){
+                    page = param;
+                    break;
+                }
+            }
+            index ++;
+        }
+
+        $location.path('/wiki/'+page);
+    };
 });
 
 app.controller('homeController', function($scope){
     $scope.test2 = 'wow';
 });
 
-app.controller('wikiController', function($scope, $location, $anchorScroll, $routeParams, $route){
+app.controller('wikiController', function($scope, $routeParams, $route, $sce){
     var article = wikiDataBase.articles[$routeParams.name];
     $scope.routeName = $routeParams.name;
 
-    $scope.scrollTo = function(id){
-        $location.hash(id);
-        $anchorScroll();
+    $scope.toTrusted = function(html_code) {
+        return $sce.trustAsHtml(html_code);
     };
 
     $scope.store = function(){
@@ -95,7 +114,7 @@ app.controller('wikiController', function($scope, $location, $anchorScroll, $rou
 
     if (article){
         $scope.title = article.title;
-        $scope.content = wikiEditor.decode(article.content);    
+        $scope.content = WIKI.decode(article.content);
     } else {
         $scope.isNew = true;
         $scope.formData = {
@@ -105,7 +124,7 @@ app.controller('wikiController', function($scope, $location, $anchorScroll, $rou
     }
 });
 
-app.controller('wikiEditController', function($scope, $routeParams, $location, $rootScope){
+app.controller('wikiEditController', function($scope, $routeParams, $location){
     var article = wikiDataBase.articles[$routeParams.name];
 
     $scope.formData = {
@@ -114,7 +133,7 @@ app.controller('wikiEditController', function($scope, $routeParams, $location, $
     };
 
     $scope.store = function(){
-        wikiDataBase.articles[$routeParams.name] = {
+        wikiDataBase.articles[$routeParams.name.replace(' ', '_')] = {
             title: $scope.formData.title,
             content: $scope.formData.content
         };
@@ -122,22 +141,8 @@ app.controller('wikiEditController', function($scope, $routeParams, $location, $
     };
 });
 
-(function () {
-    'use strict';
-
-    var module = angular.module('angular-bind-html-compile', []);
-
-    module.directive('bindHtmlCompile', ['$compile', function ($compile) {
-        return {
-            restrict: 'A',
-            link: function (scope, element, attrs) {
-                scope.$watch(function () {
-                    return scope.$eval(attrs.bindHtmlCompile);
-                }, function (value) {
-                    element.html(value);
-                    $compile(element.contents())(scope);
-                });
-            }
-        };
-    }]);
-}());
+app.filter('safe', function($sce) {
+    return function(val) {
+        return $sce.trustAsHtml(val);
+    };
+});

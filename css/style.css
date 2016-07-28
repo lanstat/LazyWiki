@@ -1,3 +1,8 @@
+.menu-bar ul{
+    list-style-type: none;
+    padding-left: 20px;
+}
+
 .wiki-article{
     padding-right: 20px;
 }
@@ -10,6 +15,28 @@ a{
     font-style: italic;
     font-size: 1.8em;
     border-bottom: 1px solid #aaa;
+}
+
+.wiki-article h4{
+    color: #000;
+    background: none;
+    font-weight: bold;
+    font-size: 1.3em;
+    margin: 0;
+    overflow: hidden;
+    padding-top: .5em;
+    padding-bottom: .17em;
+}
+
+.wiki-article h5{
+    color: #000;
+    background: none;
+    font-weight: bold;
+    font-size: 1.1em;
+    margin: 0;
+    overflow: hidden;
+    padding-top: .5em;
+    padding-bottom: .17em;
 }
 
 .wiki-article .thumb{

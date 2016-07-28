@@ -1,4 +1,4 @@
-window.wikiEditor = {
+window.WIKI = {
     decode: function(content){
         var response = content;
         var match;
@@ -17,7 +17,7 @@ window.wikiEditor = {
 
         block = '<ol>';
         for(var i=0; i< refs.length; i++){
-            response = response.replace('<ref>'+refs[i]+'</ref>', '<sup id="cite_ref-'+(i+1)+'" class="reference"><a title="asda" ng-click="scrollTo(\'cite_note-'+(i+1)+'\')">['+(i+1)+']</a></sup>');
+            response = response.replace('<ref>'+refs[i]+'</ref>', '<sup id="cite_ref-'+(i+1)+'" class="reference"><a title="Un tiltulo provisional" onclick="goTo(\'cite_note-'+(i+1)+'\')">['+(i+1)+']</a></sup>');
             block += '<li id="cite_note-'+(i+1)+'" class="">' + this.parseRef(refs[i], (i+1)) + '</li>';
         }
         block += '</ol>';
@@ -32,17 +32,30 @@ window.wikiEditor = {
         //links
         response = this.parseLinks(response);
 
-        // response = response.replace(/\[\[(.+?)\|thumb\|(.+?)[\]][\]]\n/g, this.parseThumb(response));
-        // response = response.replace(/\[\[(.+?)\|(.+?)[\]][\]]/g, '<a href="#wiki3/$1">$2</a>');
-        // response = response.replace(/\[\[(.+?)[\]][\]]/g, '<a href="#wiki2/$1">$1</a>');
-        // response = response.replace(/\[(.+?)\s(.+?)[\]]/g, '<a href="$1">$2</a>');
+        //BLoques de contenido
+        response = this.parseBlocks(response);
 
         //Encabezado
-        response = response.replace(/==(.+?)==/g, '<h3>$1</h3>');
+        response = this.parseHeaders(response);
 
         response = response.replace(/\n/g, '<br>');
 
         return response;
+    },
+    parseHeaders: function(content){
+        var headers = [];
+        return content.replace(/==+(.+?)==+(\n|)/g, function(encountered){
+            var response = '';
+            encountered = encountered.trim();
+            if (encountered.startsWith('====')){
+                response = '<h5>' + encountered.replace(/====/g, '') + '</h5>';
+            }else if (encountered.startsWith('===')){
+                response = '<h4>' + encountered.replace(/===/g, '') + '</h4>';
+            }else if (encountered.startsWith('==')){
+                response = '<h3>' + encountered.replace(/==/g, '') + '</h3>';
+            }
+            return response;
+        });
     },
     parseRef: function(content, index){
         var response = '';
@@ -56,70 +69,51 @@ window.wikiEditor = {
             if (match != null){
                 data[match[1]] = match[2];
             }else{
-                data['type'] = aux[i];
+                data['type'] = aux[i].replace('cite ', '');
             }
         }
 
-        switch (data['type']){
-            case 'cite book':
-                response += '<span class="mw-cite-backlink"><b><a ng-click="scrollTo(\'cite_ref-'+index+'\')"><span class="cite-accessibility-label">Subir </span>^</a></b></span>';
-                response += '<span class="reference-text"><cite class="citation book">'+data.last+', '+data.first+' ('+data.year+'). ';
-                response += '<i>'+ data.title +'</i>. '+ data.publisher +' p.&nbsp;' + data.page + '. ';
-                response += '<a href="https://en.wikipedia.org/wiki/International_Standard_Book_Number" title="International Standard Book Number">ISBN</a>&nbsp;';
-                response += '<a href="/wiki/Special:BookSources/978-0-89102-124-7" title="Special:BookSources/'+data.isbn+'">'+data.isbn+'</a>.</cite>';
-                response += '</span>';
-                break;
+        data['index'] = index;
+
+        if (typeof WIKI.template.cite[data['type']] !== 'undefined'){
+            response = WIKI.template.cite[data['type']]().formatMatch(data);
         }
-
-        return response;
-    },
-    parseThumb: function(content){
-        var response = '';
-
-        response += '<div class="thumb pull-right"> '
-        response += '<div class="thumbinner" style="width:222px;"><a href="#wiki/File:Is5Cummings.jpg" class="image"><img alt="" src="assets/220px-Is5Cummings.jpg" width="220" height="330" class="thumbimage" srcset="//upload.wikimedia.org/wikipedia/en/a/a1/Is5Cummings.jpg 1.5x, //upload.wikimedia.org/wikipedia/en/a/a1/Is5Cummings.jpg 2x" data-file-width="274" data-file-height="411"></a>';
-        response += '<div class="thumbcaption">';
-        response += '<div class="magnify"><a href="/wiki/File:Is5Cummings.jpg" class="internal" title="Enlarge"></a></div>';
-        response += 'First edition (publ. <a href="/wiki/Boni_%26_Liveright" title="Boni &amp; Liveright">Boni &amp; Liveright</a>)</div>';
-        response += '</div>';
-        response += '</div>';
 
         return response;
     },
     parseLinks: function(content){
+        var _this = this;
         var response = content;
-        var links = [];
-
-        var pattern = /\[\[(.+?)[\]][\]]/g;
-        var match = pattern.exec(content);
-
-        while (match != null){
-            links.push(match[1]);
-            match = pattern.exec(content);
-        }
+        var links = this.matchPattern(content, '[[', ']]');
 
         for(var i=0; i< links.length; i++){
-            response = response.replace('[['+links[i]+']]', function(cont){
+            response = response.replace('[['+links[i].content+']]', function(cont){
                 var item = cont.split('|');
                 var resp = '';
 
-                if (item.length > 1){
-                    if (item[0].startsWith('File')){
-
-                    } else {
+                switch (item.length){
+                    case 1:
+                        resp = '<a href="#wiki/'+ cont +'">'+ cont +'</a>';
+                        break;
+                    case 2:
                         resp = '<a href="#wiki/'+ item[0] +'">'+ item[1] +'</a>';
-                    }
-                }else{
-                    resp = '<a href="#wiki/'+ cont +'">'+ cont +'</a>';
+                        break;
+                    default:
+                        if (typeof WIKI.template.link[item[1]] !== 'undefined'){
+                            resp = WIKI.template.link[item[1]](item[0].replace('File:', ''), _this.parseLinks(item[2]));
+                        }else{
+                            resp = cont;
+                        }
                 }
 
                 return resp;
-            }(links[i]));
+            }(links[i].content));
         }
+
         links = [];
 
-        pattern = /\[(.+?)[\]]/g;
-        match = pattern.exec(response);
+        var pattern = /\[(.+?)[\]]/g;
+        var match = pattern.exec(response);
 
         while (match != null){
             if(!parseInt(match[1])){
@@ -137,7 +131,7 @@ window.wikiEditor = {
                     var href = item[0];
                     delete  item[0];
 
-                    resp = '<a href="'+ href +'">'+ item.join(' ') +'</a>';
+                    resp = '<a href="{0}">{1}</a>'.format(href.replace(' ', '_'), item.join(' '));
                 }else{
                     resp = '<a href="'+ cont +'">'+ cont +'</a>';
                 }
@@ -147,5 +141,112 @@ window.wikiEditor = {
         }
 
         return response;
+    },
+    parseBlocks: function(content){
+        var _this = this;
+        var response = content;
+        var blocks = this.matchPattern(content, '{{', '}}');
+
+        for (var i = 0; i < blocks.length; i++){
+            var block = blocks[i];
+
+            response = response.replace('{{'+ block.content +'}}', function(record){
+                var response = '';
+                var parts = record.content.split('|');
+
+                if (record.hasInner){
+                    response = _this.parseBlocks(record.content);
+                }
+
+                var index = parts[0].replace(' ', '_').trim();
+                if (typeof WIKI.template.block[index] !== 'undefined'){
+                    response = WIKI.template.block[index](parts);
+                }
+
+                return response;
+            }(block));
+        }
+
+        return response;
+    },
+    matchPattern : function(content, init, end){
+        end = typeof end === 'undefined'? init: end;
+
+        var response = [];
+        var counter = 0;
+        var buffer = '';
+        var auxI = '';
+        var auxE = '';
+        var pivotI = 0;
+        var pivotE = 0;
+        var hasInner = false;
+
+        for (var iter = 0; iter < content.length; iter++){
+            if (content[iter] === init[pivotI] && pivotE == 0){
+                pivotI++;
+                auxI += content[iter];
+                if (auxI === init){
+                    if(counter > 0){
+                        buffer += auxI;
+                    } else {
+                        buffer = '';
+                    }
+
+                    counter++;
+                    auxI = '';
+                    pivotI = 0;
+
+                    if (counter > 1){
+                        hasInner =true;
+                    }
+                }
+
+                continue;
+            }else{
+                if (pivotI > 0){
+                    buffer += auxI;
+                }
+
+                pivotI = 0;
+                auxI = '';
+            }
+
+            if (counter > 0){
+                if (content[iter] === end[pivotE] && pivotI == 0){
+                    auxE += content[iter];
+                    if (auxE === end){
+                        counter--;
+
+                        if (counter > 0){
+                            buffer += auxE;
+                        }
+
+                        auxE = '';
+                        pivotE = 0;
+                    }
+
+                    if (counter <= 0){
+                        response.push({content: buffer, hasInner: hasInner});
+                        hasInner = false;
+                        buffer = '';
+                    }
+                    continue;
+                } else {
+                    if (pivotE > 0){
+                        buffer += auxE;
+                    }
+
+                    auxE = '';
+                    pivotE = 0;
+                }
+
+                buffer += content[iter];
+            }
+        }
+
+        console.log(response);
+
+        return response;
     }
 };
+

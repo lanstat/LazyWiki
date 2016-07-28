@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+    <script>
+        var parser = function(content, init, end){
+            end = typeof end === 'undefined'? init: end;
+
+            var response = [];
+            var counter = 0;
+            var buffer = '';
+            var auxI = '';
+            var auxE = '';
+            var pivotI = 0;
+            var pivotE = 0;
+
+            for (var iter = 0; iter < content.length; iter++){
+                if (content[iter] === init[pivotI] && pivotE == 0){
+                    pivotI++;
+                    auxI += content[iter];
+                    if (auxI === init){
+                        if(counter > 0){
+                            buffer += auxI;
+                        }
+
+                        counter++;
+                        auxI = '';
+                        pivotI = 0;
+                    }
+
+                    continue;
+                }else{
+                    if (pivotI > 0){
+                        buffer += auxI;
+                    }
+
+                    pivotI = 0;
+                    auxI = '';
+                }
+
+                if (counter > 0){
+                    if (content[iter] === end[pivotE] && pivotI == 0){
+                        auxE += content[iter];
+                        if (auxE === end){
+                            counter--;
+
+                            if (counter > 0){
+                                buffer += auxE;
+                            }
+
+                            auxE = '';
+                            pivotE = 0;
+                        }
+
+                        if (counter <= 0){
+                            response.push(buffer);
+                            buffer = '';
+                        }
+                        continue;
+                    } else {
+                        if (pivotE > 0){
+                            buffer += auxE;
+                        }
+
+                        auxE = '';
+                        pivotE = 0;
+                    }
+
+                    if (content[iter] == '['){
+                        console.log('asdasd');
+                    }
+
+                    buffer += content[iter];
+                }
+            }
+
+            return response;
+        };
+
+        console.log(parser("[[File:Is5Cummings.jpg|thumb|First edition (publ. [[Boni & Liveright]])]]'''''is 5''''' is a collection of [[poetry]] by [[E. E. Cummings]], published in 1926.<ref>{{cite book|last=Dendinger|first=Lloyd N.|title=E. E. Cummings, the critical reception|year=1981|publisher=Ayer Publishing|isbn=978-0-89102-124-7|page=57}}</ref>  It contains 88 poems, divided into five sections.", '[[', ']]'));
+    </script>
+</body>
+</html>
