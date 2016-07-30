@@ -1,6 +1,6 @@
 var app = angular.module('lazyWiki',['ngRoute', 'ngSanitize']);
 
-app.config(function($routeProvider){
+app.config(['$routeProvider', function($routeProvider){
     $routeProvider.
         when('/', {
             controller: 'homeController',
@@ -23,9 +23,9 @@ app.config(function($routeProvider){
         .otherwise({
             redirectTo: '/'
         });
-});
+}]);
 
-app.controller('mainController', function($scope){
+app.controller('mainController', ['$scope', function($scope){
     $scope.saveDatabase = function(){
         var data = 'window.wikiDataBase={';
 
@@ -60,9 +60,9 @@ app.controller('mainController', function($scope){
         link.attr('download', 'data.js');
         link[0].click();
     };
-});
+}]);
 
-app.controller('menuController', function($scope, $location){
+app.controller('menuController', ['$scope', '$location',function($scope, $location){
     $scope.navigation = [
         {title:'Interaccion', items:[
             {title:'Ayuda', link:'#/'},
@@ -90,13 +90,12 @@ app.controller('menuController', function($scope, $location){
 
         $location.path('/wiki/'+page);
     };
-});
+}]);
 
-app.controller('homeController', function($scope){
-    $scope.test2 = 'wow';
-});
+app.controller('homeController', ['$scope', function($scope){
+}]);
 
-app.controller('wikiController', function($scope, $routeParams, $route, $sce){
+app.controller('wikiController', ['$scope', '$routeParams', '$route', '$sce', function($scope, $routeParams, $route, $sce){
     var article = wikiDataBase.articles[$routeParams.name];
     $scope.routeName = $routeParams.name;
 
@@ -122,9 +121,9 @@ app.controller('wikiController', function($scope, $routeParams, $route, $sce){
             content: ''
         };
     }
-});
+}]);
 
-app.controller('wikiEditController', function($scope, $routeParams, $location){
+app.controller('wikiEditController', ['$scope', '$routeParams', '$location', function($scope, $routeParams, $location){
     var article = wikiDataBase.articles[$routeParams.name];
 
     $scope.formData = {
@@ -139,10 +138,10 @@ app.controller('wikiEditController', function($scope, $routeParams, $location){
         };
         $location.path('/wiki/'+$routeParams.name);
     };
-});
+}]);
 
-app.filter('safe', function($sce) {
+app.filter('safe', ['$sce', function($sce) {
     return function(val) {
         return $sce.trustAsHtml(val);
     };
-});
+}]);

@@ -45,7 +45,7 @@ window.WIKI = {
             return response;
         });
 
-        if (headers.length > 0){
+        if (headers.length > 3){
             var table = '<div id="toc" class="toc">';
             table += '<div id="toctitle">';
             table += '<h2>Contenido</h2>';
@@ -55,7 +55,7 @@ window.WIKI = {
             var h3 = 0;
             var h4 = 0;
             for (var i = 0; i < headers.length; i++){
-                if (headers[i].type == 1){
+                if (headers[i].type === 1){
                     if (h3>0){
                         table += '</ul>';
                     }
@@ -64,11 +64,11 @@ window.WIKI = {
                     h2++;
                     table += '<li><a onclick="goTo(\'{2}\')"><span class="tocnumber">{0}</span> <span class="toctext">{1}</span></a></li>'
                         .format(h2, headers[i].content, headers[i].content.replace(/ /g, '_'));
-                } else if (headers[i].type == 2){
+                } else if (headers[i].type === 2){
                     if (h4>0){
                         table += '</ul>';
                     }
-                    if (h3 == 0){
+                    if (h3 === 0){
                         table += '<ul style="display: block;">';
                     }
                     h4 = 0;
@@ -87,6 +87,8 @@ window.WIKI = {
             table += '</ul></div></div>';
 
             response = response.replace('-#$%Content%$#-', table);
+        } else {
+            response = response.replace('-#$%Content%$#-', '');
         }
 
         return response;
@@ -98,7 +100,7 @@ window.WIKI = {
         var refs = [];
         var block;
 
-        while (match != null){
+        while (match !== null){
             refs.push(match[1]);
             match = pattern.exec(response);
         }
@@ -139,6 +141,8 @@ window.WIKI = {
         return response;
     },
     parseLinks: function(content){
+        'use strict';
+
         var _this = this;
         var response = content;
         var links = this.matchPattern(content, '[[', ']]');
@@ -180,7 +184,7 @@ window.WIKI = {
         }
 
         for(var i=0; i< links.length; i++){
-            response = response.replace('['+links[i]+']', function(cont){
+            response = response.replace('['+links[i]+']', (function(cont){
                 var item = cont.split(' ');
                 var resp = '';
 
@@ -194,7 +198,7 @@ window.WIKI = {
                 }
 
                 return resp;
-            }(links[i]));
+            }(links[i])));
         }
 
         return response;
@@ -207,11 +211,11 @@ window.WIKI = {
         for (var i = 0; i < blocks.length; i++){
             var block = blocks[i];
 
-            response = response.replace('{{' + block.content + '}}', function(record){
-                var response = '';
+            response = response.replace('{{' + block.content + '}}', (function(record){
+                var response = record.content;
 
                 if (record.hasInner){
-                    response = _this.parseBlocks(record.content);
+                    response = _this.parseBlocks(response);
                 }
 
                 var parts = response.split('|');
@@ -223,7 +227,7 @@ window.WIKI = {
                 }
 
                 return response;
-            }(block));
+            }(block)));
         }
 
         return response;
@@ -241,7 +245,7 @@ window.WIKI = {
         var hasInner = false;
 
         for (var iter = 0; iter < content.length; iter++){
-            if (content[iter] === init[pivotI] && pivotE == 0){
+            if (content[iter] === init[pivotI] && pivotE === 0){
                 pivotI++;
                 auxI += content[iter];
                 if (auxI === init){
@@ -271,7 +275,7 @@ window.WIKI = {
             }
 
             if (counter > 0){
-                if (content[iter] === end[pivotE] && pivotI == 0){
+                if (content[iter] === end[pivotE] && pivotI === 0){
                     auxE += content[iter];
                     if (auxE === end){
                         counter--;

@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <title>LazyWiki</title>
+    <!-- build:css css/bootstrap.min.css -->
     <link href="bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- endbuild -->
     <link href="css/style.css" rel="stylesheet">
 </head>
 <body ng-controller="mainController">
@@ -52,7 +54,7 @@
                 </li>
             </ul>
         </div>
-        <div class="col-sm-10">
+        <div id="wikiContent" class="col-sm-10">
             <div ng-view></div>
         </div>
     </div>
@@ -115,13 +117,21 @@
         </div>
     </script>
 
+    <!-- build:js js/angular.min.js -->
     <script src="bower_components/angular/angular.min.js"></script>
+    <!-- endbuild -->
+    <!-- build:js js/angular-route.min.js -->
     <script src="bower_components/angular-route/angular-route.min.js"></script>
+    <!-- endbuild -->
+    <!-- build:js js/angular-sanitize.min.js -->
     <script src="bower_components/angular-sanitize/angular-sanitize.min.js"></script>
+    <!-- endbuild -->
+    <!-- build:js js/lazyWiki.min.js -->
     <script src="scripts/tools.js"></script>
     <script src="scripts/wikieditor.js"></script>
     <script src="scripts/wikiTpl.js"></script>
     <script src="scripts/app.js"></script>
+    <!-- endbuild -->
     <script src="assets/data.js"></script>
 </body>
 </html>

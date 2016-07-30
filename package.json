@@ -1,0 +1,41 @@
+{
+  "name": "lazy-wiki",
+  "version": "0.0.1",
+  "description": "Wiki minimalista y portable",
+  "main": "LazyWiki.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "gulp test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lanstat/LazyWiki.git"
+  },
+  "keywords": [
+    "uml",
+    "lazy",
+    "wiki",
+    "js",
+    "portable"
+  ],
+  "author": "Juan Javier Garson Aparicio <lanstat@gmail.com> (http://www.lanstat.net)",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/lanstat/LazyWiki/issues"
+  },
+  "devDependencies": {
+    "gulp": "^3.8.10",
+    "gulp-concat": "2.6.0",
+    "gulp-eslint": "2.0.0",
+    "gulp-load-plugins": "^0.7.1",
+    "gulp-load-utils": "0.0.4",
+    "gulp-task-listing": "^0.3.0",
+    "gulp-uglify": "^1.0.1",
+    "gulp-util": "^3.0.1"
+  },
+  "dependencies": {
+    "gulp-useref": "^3.1.0"
+  }
+}
