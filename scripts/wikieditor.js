@@ -1,28 +1,9 @@
 window.WIKI = {
     decode: function(content){
         var response = content;
-        var match;
-        var pattern;
-        var refs = [];
-        var block;
 
         //Referencias
-        pattern = /<ref>(.+?)<\/ref>/g;
-        match = pattern.exec(response);
-
-        while (match != null){
-            refs.push(match[1]);
-            match = pattern.exec(response);
-        }
-
-        block = '<ol>';
-        for(var i=0; i< refs.length; i++){
-            response = response.replace('<ref>'+refs[i]+'</ref>', '<sup id="cite_ref-'+(i+1)+'" class="reference"><a title="Un tiltulo provisional" onclick="goTo(\'cite_note-'+(i+1)+'\')">['+(i+1)+']</a></sup>');
-            block += '<li id="cite_note-'+(i+1)+'" class="">' + this.parseRef(refs[i], (i+1)) + '</li>';
-        }
-        block += '</ol>';
-
-        response = response.replace(/\{\{RefList\}\}/gi, block);
+        response = this.parseRef(response);
 
         //Formateo
         response = response.replace(/'''''((\w|\s)+)'''''/g, '<b><i>$1</i></b>');
@@ -44,7 +25,7 @@ window.WIKI = {
     },
     parseHeaders: function(content){
         var headers = [];
-        var response = content.replace(/==+(.+?)==+(\n|)/g, function(encountered, title){
+        var response = content.replace(/==+((\w|\s)+)==+(\n|)/g, function(encountered, title){
             var response = '';
             title = title.trim();
             if (encountered.startsWith('====')){
@@ -67,13 +48,40 @@ window.WIKI = {
         if (headers.length > 0){
             var table = '<div id="toc" class="toc">';
             table += '<div id="toctitle">';
-            table += '<h2>Contents</h2>';
+            table += '<h2>Contenido</h2>';
             table += '<ul style="display: block;">';
 
+            var h2 = 0;
+            var h3 = 0;
+            var h4 = 0;
             for (var i = 0; i < headers.length; i++){
                 if (headers[i].type == 1){
+                    if (h3>0){
+                        table += '</ul>';
+                    }
+                    h4 = 0;
+                    h3 = 0;
+                    h2++;
                     table += '<li><a onclick="goTo(\'{2}\')"><span class="tocnumber">{0}</span> <span class="toctext">{1}</span></a></li>'
-                        .format(i+1, headers[i].content, headers[i].content.replace(/ /g, '_'));
+                        .format(h2, headers[i].content, headers[i].content.replace(/ /g, '_'));
+                } else if (headers[i].type == 2){
+                    if (h4>0){
+                        table += '</ul>';
+                    }
+                    if (h3 == 0){
+                        table += '<ul style="display: block;">';
+                    }
+                    h4 = 0;
+                    h3++;
+                    table += '<li><a onclick="goTo(\'{2}\')"><span class="tocnumber">{0}</span> <span class="toctext">{1}</span></a></li>'
+                        .format(h2 + '.' + h3, headers[i].content, headers[i].content.replace(/ /g, '_'));
+                } else if (headers[i].type == 3){
+                    if (h4 == 0){
+                        table += '<ul style="display: block;">';
+                    }
+                    h4++;
+                    table += '<li><a onclick="goTo(\'{2}\')"><span class="tocnumber">{0}</span> <span class="toctext">{1}</span></a></li>'
+                        .format(h2 + '.' + h3 + '.' + h4, headers[i].content, headers[i].content.replace(/ /g, '_'));
                 }
             }
             table += '</ul></div></div>';
@@ -83,8 +91,31 @@ window.WIKI = {
 
         return response;
     },
-    parseRef: function(content, index){
-        var response = '';
+    parseRef: function(content){
+        var response = content;
+        var pattern = /<ref>(.+?)<\/ref>/g;
+        var match = pattern.exec(response);
+        var refs = [];
+        var block;
+
+        while (match != null){
+            refs.push(match[1]);
+            match = pattern.exec(response);
+        }
+
+        block = '<ol>';
+        for(var i=0; i< refs.length; i++){
+            response = response.replace('<ref>'+refs[i]+'</ref>', '<sup id="cite_ref-'+(i+1)+'" class="reference"><a title="Un titulo provisional" onclick="goTo(\'cite_note-'+(i+1)+'\')">['+(i+1)+']</a></sup>');
+            block += '<li id="cite_note-'+(i+1)+'" class="">' + this.parseRef(refs[i], (i+1)) + '</li>';
+        }
+        block += '</ol>';
+
+        response = response.replace(/\{\{Reflist(.*\n)*\}\}/gi, block);
+
+
+
+
+        /*var response = '';
         var data = {};
 
         content = content.substring(2, content.length-2);
@@ -95,7 +126,7 @@ window.WIKI = {
             if (match != null){
                 data[match[1]] = match[2];
             }else{
-                data['type'] = aux[i].replace('cite ', '');
+                data['type'] = aux[i].replace('cite ', '').trim();
             }
         }
 
@@ -103,7 +134,7 @@ window.WIKI = {
 
         if (typeof WIKI.template.cite[data['type']] !== 'undefined'){
             response = WIKI.template.cite[data['type']]().formatMatch(data);
-        }
+        }*/
 
         return response;
     },
@@ -176,15 +207,17 @@ window.WIKI = {
         for (var i = 0; i < blocks.length; i++){
             var block = blocks[i];
 
-            response = response.replace('{{'+ block.content +'}}', function(record){
+            response = response.replace('{{' + block.content + '}}', function(record){
                 var response = '';
-                var parts = record.content.split('|');
 
                 if (record.hasInner){
                     response = _this.parseBlocks(record.content);
                 }
 
-                var index = parts[0].replace(' ', '_').trim();
+                var parts = response.split('|');
+
+                var index = parts[0].trim().toLowerCase().replace(/\s/g, '_');
+
                 if (typeof WIKI.template.block[index] !== 'undefined'){
                     response = WIKI.template.block[index](parts);
                 }
@@ -269,8 +302,6 @@ window.WIKI = {
                 buffer += content[iter];
             }
         }
-
-        console.log(response);
 
         return response;
     }

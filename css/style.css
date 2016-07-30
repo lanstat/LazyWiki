@@ -30,7 +30,7 @@ a{
 
 .wiki-article .toc ul{
     list-style-type: none;
-    padding-left: 10px;
+    padding-left: 15px;
 }
 
 .wiki-article h2{
@@ -90,4 +90,30 @@ a{
 
 .cite-accessibility-label{
     display: none;
+}
+
+.infobox {
+    border: 1px solid #aaa;
+    border-spacing: 3px;
+    background-color: #f9f9f9;
+    color: black;
+    margin: 0.5em 0 0.5em 1em;
+    padding: 0.2em;
+    float: right;
+    clear: right;
+    font-size: 88%;
+    line-height: 1.5em;
+}
+
+.infobox td, .infobox th {
+    vertical-align: top;
+    text-align: left;
+    padding: 2px;
+}
+
+.infobox caption{
+    font-size: 125%;
+    font-weight: bold;
+    padding: 0.2em;
+    text-align: center;
 }
