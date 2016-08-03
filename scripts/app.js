@@ -95,48 +95,51 @@ app.controller('menuController', ['$scope', '$location',function($scope, $locati
 app.controller('homeController', ['$scope', function($scope){
 }]);
 
-app.controller('wikiController', ['$scope', '$routeParams', '$route', '$sce', function($scope, $routeParams, $route, $sce){
-    var article = wikiDataBase.articles[$routeParams.name];
-    $scope.routeName = $routeParams.name;
+app.controller('wikiController', ['$scope', '$routeParams', '$route', '$sce', '$location', function($scope, $routeParams, $route, $sce, $location){
+    wikiDataBase.read($routeParams.name, function(status, article){
+        $scope.$apply(function(){
+            $scope.routeName = $routeParams.name;
+            if (article){
+                $scope.title = article.title;
+                $scope.content = WIKI.decode(article.content);
+            } else {
+                $location.path('/wiki/'+$routeParams.name+ '/edit');
+            }
+        });
+    });
 
     $scope.toTrusted = function(html_code) {
         return $sce.trustAsHtml(html_code);
     };
-
-    $scope.store = function(){
-        wikiDataBase.articles[$routeParams.name] = {
-            title: $scope.formData.title,
-            content: $scope.formData.content
-        };
-        $route.reload();
-    };
-
-    if (article){
-        $scope.title = article.title;
-        $scope.content = WIKI.decode(article.content);
-    } else {
-        $scope.isNew = true;
-        $scope.formData = {
-            title: $routeParams.name.replace(/_/g, ' '),
-            content: ''
-        };
-    }
 }]);
 
 app.controller('wikiEditController', ['$scope', '$routeParams', '$location', function($scope, $routeParams, $location){
-    var article = wikiDataBase.articles[$routeParams.name];
-
-    $scope.formData = {
-        title: article.title,
-        content: article.content
-    };
+    wikiDataBase.read($routeParams.name, function(status, article){
+        if (status > -1){
+            $scope.$apply(function(){
+                $scope.formData = {
+                    title: article.title,
+                    content: article.content
+                };
+            });
+        } else {
+            $scope.$apply(function(){
+                $scope.formData = {
+                    title: $routeParams.name,
+                    content: ''
+                };
+            });
+        }
+    });
 
     $scope.store = function(){
-        wikiDataBase.articles[$routeParams.name.replace(' ', '_')] = {
-            title: $scope.formData.title,
-            content: $scope.formData.content
-        };
-        $location.path('/wiki/'+$routeParams.name);
+        var article = {hash: $routeParams.name.replace(' ', '_'), title: $scope.formData.title, content: $scope.formData.content};
+
+        wikiDataBase.write(article, function(){
+            $scope.$apply(function(){
+                $location.path('/wiki/'+article.hash);
+            });
+        });
     };
 }]);
 
