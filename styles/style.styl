@@ -1,0 +1,43 @@
+@font-face
+  font-family 'OpenSans'
+  src url('../assets/fonts/OpenSans-Regular.ttf') format('truetype')
+  font-weight normal
+  font-style normal
+
+@font-face
+  font-family 'OpenSansBold'
+  src url('../assets/fonts/OpenSans-Bold.ttf') format('truetype')
+  font-weight bold
+  font-style normal
+
+@import "globals.styl"
+
+body
+  overflow hidden
+  background-color $lightGray
+  color $lightBlack
+  height 100%
+
+.b-l
+  border-left 1px solid $gray
+
+.b-t
+  border-top 1px solid $gray
+
+.b-r
+  border-right 1px solid $gray
+
+.b-b
+  border-bottom 1px solid $gray
+
+.pad-0
+  padding 0
+
+.light-gray
+  background-color $lightGray
+
+a
+  color #2e92c6
+
+@import "navbar.styl"
+@import "homepage.styl"

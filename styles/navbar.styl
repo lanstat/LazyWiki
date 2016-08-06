@@ -1,0 +1,40 @@
+@import "globals.styl"
+
+.navbar
+  margin-bottom 0
+  height 60px
+  background-color $white
+
+.navbar-nav
+  height 60px
+  &>li
+    height 60px
+    &>a
+      padding-top 20px
+      padding-bottom 20px
+      text-transform uppercase
+
+.navbar-form
+  margin-top 12px
+
+.navbar-default
+  .navbar-nav
+    &>.active>a
+      &,
+      &:focus,
+      &:hover
+        color $white
+        background-color $darkGray
+
+
+#searchBox
+  background-color $gray
+  border-radius 20px
+  &::-webkit-input-placeholder
+    color #FFFFFF
+  &:-moz-placeholder
+    color #FFFFFF
+  &::-moz-placeholder
+    color #FFFFFF
+  &:-ms-input-placeholder
+    color #FFFFFF

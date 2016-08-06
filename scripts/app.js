@@ -60,6 +60,25 @@ app.controller('mainController', ['$scope', function($scope){
         link.attr('download', 'data.js');
         link[0].click();
     };
+
+    $scope.days = [];
+
+    $scope.days.push({image: 'assets/data/taj-mahal.jpg', content: 'Taj mahal'});
+    $scope.days.push({image: 'assets/data/taj-mahal.jpg', content: 'Taj mahal'});
+    $scope.days.push({image: 'assets/data/taj-mahal.jpg', content: 'Taj mahal'});
+    $scope.days.push({image: 'assets/data/taj-mahal.jpg', content: 'Taj mahal'});
+    $scope.days.push({image: 'assets/data/taj-mahal.jpg', content: 'Taj mahal'});
+    $scope.days.push({image: 'assets/data/taj-mahal.jpg', content: 'Taj mahal'});
+    $scope.days.push({image: 'assets/data/taj-mahal.jpg', content: 'Taj mahal'});
+    $scope.days.push({image: 'assets/data/taj-mahal.jpg', content: 'Taj mahal'});
+    $scope.days.push({image: 'assets/data/taj-mahal.jpg', content: 'Taj mahal'});
+    $scope.days.push({image: 'assets/data/taj-mahal.jpg', content: 'Taj mahal'});
+    $scope.days.push({image: 'assets/data/taj-mahal.jpg', content: 'Taj mahal'});
+    $scope.days.push({image: 'assets/data/taj-mahal.jpg', content: 'Taj mahal'});
+    $scope.days.push({image: 'assets/data/taj-mahal.jpg', content: 'Taj mahal'});
+    $scope.days.push({image: 'assets/data/taj-mahal.jpg', content: 'Taj mahal'});
+    $scope.days.push({image: 'assets/data/taj-mahal.jpg', content: 'Taj mahal'});
+    $scope.days.push({image: 'assets/data/taj-mahal.jpg', content: 'Taj mahal'});
 }]);
 
 app.controller('menuController', ['$scope', '$location',function($scope, $location){
@@ -93,6 +112,7 @@ app.controller('menuController', ['$scope', '$location',function($scope, $locati
 }]);
 
 app.controller('homeController', ['$scope', function($scope){
+
 }]);
 
 app.controller('wikiController', ['$scope', '$routeParams', '$route', '$sce', '$location', function($scope, $routeParams, $route, $sce, $location){

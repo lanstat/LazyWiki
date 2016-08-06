@@ -7,7 +7,7 @@
     <link href="bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- endbuild -->
     <link href="bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet">
-    <link href="css/style.css" rel="stylesheet">
+    <link href="styles/style.css" rel="stylesheet">
 </head>
 <body ng-controller="mainController">
     <nav class="navbar navbar-default navbar-fixed-top">
@@ -19,7 +19,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="#"><img src="assets/logo.png" alt="lazyWiki-logo" style="width:150px"></a>
+                <a class="navbar-brand" href="#"><img src="assets/logo.png" alt="lazyWiki-logo" style="width:120px"></a>
             </div>
             <div class="collapse navbar-collapse pull-right" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
@@ -39,33 +39,74 @@
         </div>
     </nav>
     <div id="mainContainer">
-        <div style="margin-top:60px" class="row">
-            <div class="col-sm-5" style="padding-left: 15px;">
-                <div class="row">
-                    <div class="col-sm-3"><div class="wiki-day">31</div></div>
-                    <div class="col-sm-3"><div class="wiki-day">30</div></div>
-                    <div class="col-sm-3"><div class="wiki-day">31</div></div>
-                    <div class="col-sm-3"><div class="wiki-day">31</div></div>
-                    <div class="col-sm-3"><div class="wiki-day">31</div></div>
-                    <div class="col-sm-3"><div class="wiki-day">31</div></div>
-                    <div class="col-sm-3"><div class="wiki-day">31</div></div>
-                    <div class="col-sm-3"><div class="wiki-day">31</div></div>
-                    <div class="col-sm-3"><div class="wiki-day">31</div></div>
-                    <div class="col-sm-3"><div class="wiki-day">31</div></div>
-                    <div class="col-sm-3"><div class="wiki-day">31</div></div>
-                    <div class="col-sm-3"><div class="wiki-day">31</div></div>
-                    <div class="col-sm-3"><div class="wiki-day">31</div></div>
-                    <div class="col-sm-3"><div class="wiki-day">31</div></div>
-                    <div class="col-sm-3"><div class="wiki-day">31</div></div>
-                    <div class="col-sm-3"><div class="wiki-day">31</div></div>
-                    <div class="col-sm-3"><div class="wiki-day">31</div></div>
-                    <div class="col-sm-3"><div class="wiki-day">31</div></div>
-
+        <div class="row">
+            <div class="col-sm-11" style="padding: 0">
+                <div id="container1">
+                    <div id="container2" class="row">
+                        <div id="tiledArticles" class="col-sm-6" style="padding: 0 0 0 15px;margin-top: 60px;overflow-y: visible">
+                            <div class="row">
+                                <div ng-repeat="day in days" class="col-sm-3">
+                                    <div class="wiki-day">
+                                        <img src="{{day.image}}" class="img-responsive">
+                                        <div class="black-overlay"></div>
+                                        <p class="number-day">{{$index + 1}}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 pad-0" style="background-color: #ffffff;margin-top: 60px">
+                            <div class="row" style="margin: 0">
+                                <div class="col-sm-6">
+                                    asd
+                                </div>
+                                <div class="col-sm-6 b-l">
+                                    <div id="wikiNews" class="wiki-block">
+                                        <h3>En las noticias<span class="pull-right"><a href="#">Wikinews</a></span></h3>
+                                        <p class="b-b">The issue here is that ng-repeat creates its own scope, so when you do selected=$index it creates a new a selected property in that scope</p>
+                                        <p class="b-b">The issue here is that ng-repeat creates its own scope, so when you do selected=$index it creates a new a selected property in that scope</p>
+                                        <p class="b-b">The issue here is that ng-repeat creates its own scope, so when you do selected=$index it creates a new a selected property in that scope</p>
+                                        <p>The issue here is that ng-repeat creates its own scope, so when you do selected=$index it creates a new a selected property in that scope</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div id="dateLine" class="b-t b-b light-gray" >
+                                        <div style="overflow: hidden;width:1000px">
+                                            <span ng-repeat="day in days">
+                                                <a>{{$index+1}}</a>
+                                                <i class="fa fa-circle"></i>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row" style="margin: 0">
+                                <div class="col-sm-6">
+                                    <div class="wiki-block">
+                                        <h3>En las noticias<span class="pull-right"><a href="#">Wikinews</a></span></h3>
+                                        <p class="b-b">The issue here is that ng-repeat creates its own scope, so when you do selected=$index it creates a new a selected property in that scope</p>
+                                        <p class="b-b">The issue here is that ng-repeat creates its own scope, so when you do selected=$index it creates a new a selected property in that scope</p>
+                                        <p class="b-b">The issue here is that ng-repeat creates its own scope, so when you do selected=$index it creates a new a selected property in that scope</p>
+                                        <p>The issue here is that ng-repeat creates its own scope, so when you do selected=$index it creates a new a selected property in that scope</p>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6 b-l">
+                                    <div class="wiki-block">
+                                        <h3>En las noticias<span class="pull-right"><a href="#">Wikinews</a></span></h3>
+                                        <p class="b-b">The issue here is that ng-repeat creates its own scope, so when you do selected=$index it creates a new a selected property in that scope</p>
+                                        <p class="b-b">The issue here is that ng-repeat creates its own scope, so when you do selected=$index it creates a new a selected property in that scope</p>
+                                        <p class="b-b">The issue here is that ng-repeat creates its own scope, so when you do selected=$index it creates a new a selected property in that scope</p>
+                                        <p>The issue here is that ng-repeat creates its own scope, so when you do selected=$index it creates a new a selected property in that scope</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="col-sm-6" style="background-color: #ffffff"><h1>asdas</h1></div>
-            <div class="col-sm-1">
-                <div id="menuBar">
+            <div class="col-sm-1 pad-0">
+                <div id="menuBar" class="b-l">
                     <p><a>Arts</a></p>
                     <p><a>Biography</a></p>
                     <p><a>Geography</a></p>
@@ -73,6 +114,7 @@
                     <p><a>Math</a></p>
                     <p><a>Science</a></p>
                     <p><a>Technology</a></p>
+                    <p class="repo-link"><a href="https://github.com/lanstat/LazyWiki" target="_blank" title="Go to repository"><i class="fa fa-github fa-3x"></i></a></p>
                 </div>
             </div>
         </div>
