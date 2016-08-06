@@ -23,16 +23,16 @@
             </div>
             <div class="collapse navbar-collapse pull-right" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
-                    <li class="active"><a href="#">Main page</a></li>
-                    <li><a href="#">Contents</a></li>
-                    <li><a href="#">Featured contents</a></li>
-                    <li><a href="#">Current event</a></li>
-                    <li><a href="#">Random article</a></li>
+                    <li class="active"><a href="#/">Main page</a></li>
+                    <li><a href="#/contents">Contents</a></li>
+                    <li><a href="#/featured">Featured contents</a></li>
+                    <li><a href="#/events">Current event</a></li>
+                    <li><a ng-click="getRandomPage()">Random article</a></li>
                     <!--<li><a ng-click="saveDatabase()"><i class="fa fa-floppy-o" aria-hidden="true"></i></a></li>-->
                 </ul>
                 <form class="navbar-form navbar-left" role="search">
                     <div class="form-group">
-                        <input id="searchBox" type="text" class="form-control" placeholder="...">
+                        <input id="searchBox" type="text" class="form-control" style="font-family: FontAwesome" placeholder="&#xf002">
                     </div>
                 </form>
             </div>
@@ -40,10 +40,10 @@
     </nav>
     <div id="mainContainer">
         <div class="row">
-            <div class="col-sm-11" style="padding: 0">
-                <div id="container1">
-                    <div id="container2" class="row">
-                        <div id="tiledArticles" class="col-sm-6" style="padding: 0 0 0 15px;margin-top: 60px;overflow-y: visible">
+            <div class="col-sm-11" style="padding: 0;margin-top:77px">
+                <div ng-slimscroll always-visible="false" style="max-height: 780px">
+                    <div class="row" style="background-color: #ffffff">
+                        <div id="tiledArticles" class="col-sm-6" style="padding: 0 0 0 15px">
                             <div class="row">
                                 <div ng-repeat="day in days" class="col-sm-3">
                                     <div class="wiki-day">
@@ -54,14 +54,17 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-sm-6 pad-0" style="background-color: #ffffff;margin-top: 60px">
+                        <div class="col-sm-6 pad-0">
                             <div class="row" style="margin: 0">
-                                <div class="col-sm-6">
-                                    asd
+                                <div class="col-sm-6 pad-0">
+                                    <div id="featuredArticle">
+                                        <img src="assets/data/passage.jpg" class="img-responsive">
+                                        <p>The <a>Waddesdon</a> Bequest is a collection left to the British Museum in <a>Baron Ferdinand</a> Rothschild's will in 1898, taken from his New Smoking Room at Waddesdon Manor. It includes almost 300 pieces of jewellery, plate, enamel, carvings, glass and maiolica. Earlier than most objects is the Holy Thorn Reliquary, probably created in the 1390s in Paris for John, Duke of Berry.</p>
+                                    </div>
                                 </div>
                                 <div class="col-sm-6 b-l">
                                     <div id="wikiNews" class="wiki-block">
-                                        <h3>En las noticias<span class="pull-right"><a href="#">Wikinews</a></span></h3>
+                                        <h3>In the news<span class="pull-right"><a href="#">Wikinews</a></span></h3>
                                         <p class="b-b">The issue here is that ng-repeat creates its own scope, so when you do selected=$index it creates a new a selected property in that scope</p>
                                         <p class="b-b">The issue here is that ng-repeat creates its own scope, so when you do selected=$index it creates a new a selected property in that scope</p>
                                         <p class="b-b">The issue here is that ng-repeat creates its own scope, so when you do selected=$index it creates a new a selected property in that scope</p>
@@ -84,17 +87,20 @@
                             <div class="row" style="margin: 0">
                                 <div class="col-sm-6">
                                     <div class="wiki-block">
-                                        <h3>En las noticias<span class="pull-right"><a href="#">Wikinews</a></span></h3>
-                                        <p class="b-b">The issue here is that ng-repeat creates its own scope, so when you do selected=$index it creates a new a selected property in that scope</p>
-                                        <p class="b-b">The issue here is that ng-repeat creates its own scope, so when you do selected=$index it creates a new a selected property in that scope</p>
-                                        <p class="b-b">The issue here is that ng-repeat creates its own scope, so when you do selected=$index it creates a new a selected property in that scope</p>
-                                        <p>The issue here is that ng-repeat creates its own scope, so when you do selected=$index it creates a new a selected property in that scope</p>
+                                        <h3>On this day</h3>
+                                        <div class="row">
+                                            <div class="col-sm-3">
+                                                <p><a>1154</a></p>
+                                            </div>
+                                            <div class="col-sm-9">
+                                                <p>he issue <a>here</a> is that ng-repeat creates its own scope, so when you do selected=$index it creates</p>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="col-sm-6 b-l">
                                     <div class="wiki-block">
-                                        <h3>En las noticias<span class="pull-right"><a href="#">Wikinews</a></span></h3>
-                                        <p class="b-b">The issue here is that ng-repeat creates its own scope, so when you do selected=$index it creates a new a selected property in that scope</p>
+                                        <h3>Today's featured picture</h3>
                                         <p class="b-b">The issue here is that ng-repeat creates its own scope, so when you do selected=$index it creates a new a selected property in that scope</p>
                                         <p class="b-b">The issue here is that ng-repeat creates its own scope, so when you do selected=$index it creates a new a selected property in that scope</p>
                                         <p>The issue here is that ng-repeat creates its own scope, so when you do selected=$index it creates a new a selected property in that scope</p>
@@ -211,6 +217,7 @@
     <!-- build:js js/angular-sanitize.min.js -->
     <script src="bower_components/angular-sanitize/angular-sanitize.min.js"></script>
     <!-- endbuild -->
+    <script src="bower_components/ngSlimscroll/src/js/ngSlimscroll.js"></script>
     <script src="scripts/dataBase.js"></script>
     <!-- build:js js/lazyWiki.min.js -->
     <script src="scripts/tools.js"></script>

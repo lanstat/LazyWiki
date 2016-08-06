@@ -1,4 +1,4 @@
-var app = angular.module('lazyWiki',['ngRoute', 'ngSanitize']);
+var app = angular.module('lazyWiki',['ngRoute', 'ngSanitize','jkuri.slimscroll']);
 
 app.config(['$routeProvider', function($routeProvider){
     $routeProvider.
