@@ -26,6 +26,8 @@ app.config(['$routeProvider', function($routeProvider){
 }]);
 
 app.controller('mainController', ['$scope', function($scope){
+    $scope.currentSection = 1;
+    
     $scope.saveDatabase = function(){
         var data = 'window.wikiDataBase={';
 
