@@ -11,17 +11,33 @@
     font-size 12px
     padding 0
     color #cccccc
-  .read-options
-    position absolute
-    bottom 60px
-    width 100%
-    background-color $white
-    p
-      padding 5px 0 5px
-      text-align  center
-      margin 0
 
-#wikiContent
-  margin 0 50px
-  border-right  1px dashed $gray
+#noteContainer
+  position absolute
+  right 10px
+  top 0
+  width 50px
+  background-color #00b3ee
   height 100%
+  background url('../assets/dashed.png') center
+  .note
+    width 40px
+    height 40px
+    border 1px solid $gray
+    background-color $white
+    border-radius 20px
+    margin 10px auto
+    text-align center
+    padding-top 9px
+    cursor pointer
+  .add-note
+    width 25px
+    height 25px
+    border 1px solid $gray
+    background-color $white
+    border-radius 20px
+    margin 10px auto
+    text-align center
+    padding-top 2px
+    cursor pointer
+    color $gray

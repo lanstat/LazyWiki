@@ -10,7 +10,7 @@
     <link href="styles/style.css" rel="stylesheet">
 </head>
 <body ng-controller="mainController">
-    <nav class="navbar navbar-default">
+    <nav class="navbar navbar-default navbar-fixed-top">
         <div class="container-fluid">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
@@ -39,31 +39,27 @@
         </div>
     </nav>
 
+    <div style="height: 60px">a</div>
     <div style="height: 100%" ng-view></div>
-    <!--<div class="row">
-        <div class="col-sm-2 menu-bar" ng-controller="menuController">
-            <ul>
-                <li><a href="#/">Pagina principal</a></li>
-                <li><a ng-click="getRandomPage()">Pagina aleatoria</a></li>
-                <li ng-repeat="nav in navigation">
-                    <div ng-if="!nav.items">
-                        <a href="{{nav.link}}">{{ nav.title }}</a>
-                    </div>
-                    <div ng-if="nav.items">
-                        <a><b>{{ nav.title }}</b></a>
-                        <ul>
-                            <li ng-repeat="sub in nav.items">
-                                <a href="{{sub.link}}">{{ sub.title }}</a>
-                            </li>
-                        </ul>
-                    </div>
-                </li>
-            </ul>
+
+    <div ng-controller="readOptionController" class="read-options">
+        <div class="row b-t">
+            <div class="col-sm-2 b-r">
+                <p><b>HIDE LINKS:</b> <a ng-click="toggleLinks()">{{links?'OFF':'ON'}}</a></p>
+            </div>
+            <div class="col-sm-2 b-r">
+                <p><b>FONT SIZE:</b>
+                    <a ng-click="resizeFont(-2)" style="padding: 0 20px">-</a>
+                    <a ng-click="resizeFont(2)" style="padding: 0 20px">+</a></p>
+            </div>
+            <div class="col-sm-offset-4 col-sm-2 b-l">
+                <p><b>WORDS:</b> {{wordCount}}</p>
+            </div>
+            <div class="col-sm-2 b-l">
+                <p><b>TIME TO READ:</b> {{wordPerMinute}}min.</p>
+            </div>
         </div>
-        <div id="wikiContent" class="col-sm-10">
-            <div ng-view></div>
-        </div>
-    </div>-->
+    </div>
 
     <script id="homeTpl" type="text/html">
         <div id="mainContainer">
@@ -157,37 +153,24 @@
 
     <script id="articleTpl" type="text/html">
         <div id="article">
-            <div id="wikiContent">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <h1>{{title}}</h1>
-                            <p class="sub-title">De LazyWiki, mi wikipedia personal</p>
-                            <br>
-                            <div style="width: 900px; margin: 0 auto">
-                                <div ng-bind-html="toTrusted(content)"></div>
-                            </div>
+            <div ng-slimscroll always-visible="false" style="max-height: 750px;" class="container">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <h1>{{title}}</h1>
+                        <p class="sub-title">De LazyWiki, mi wikipedia personal</p>
+                        <br>
+                        <div id="wikiRender" style="width: 900px; margin: 0 auto; font-size: 14px">
+                            <div ng-bind-html="toTrusted(content)"></div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="read-options">
-                <div class="row b-t">
-                    <div class="col-sm-2 b-r">
-                        <p><b>HIDE LINKS:</b> <a>OFF</a></p>
-                    </div>
-                    <div class="col-sm-2 b-r">
-                        <p><b>FONT SIZE:</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            <a>-</a>
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            <a>+</a></p>
-                    </div>
-                    <div class="col-sm-offset-4 col-sm-2 b-l">
-                        <p><b>WORDS:</b> 5</p>
-                    </div>
-                    <div class="col-sm-2 b-l">
-                        <p><b>TIME TO READ:</b> 15min.</p>
-                    </div>
+            <div id="noteContainer">
+                <div class="note">
+                    <i class="fa fa-sticky-note fa-lg" aria-hidden="true"></i>
+                </div>
+                <div class="add-note">
+                    <i class="fa fa-plus" aria-hidden="true"></i>
                 </div>
             </div>
         </div>

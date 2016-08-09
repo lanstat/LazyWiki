@@ -117,7 +117,8 @@ app.controller('homeController', ['$scope', function($scope){
 
 }]);
 
-app.controller('wikiController', ['$scope', '$routeParams', '$route', '$sce', '$location', function($scope, $routeParams, $route, $sce, $location){
+app.controller('wikiController', ['$scope', '$routeParams', '$route', '$sce', '$location', '$rootScope',
+                                    function($scope, $routeParams, $route, $sce, $location, $rootScope){
     wikiDataBase.read($routeParams.name, function(status, article){
         $scope.$apply(function(){
             $scope.routeName = $routeParams.name;
@@ -127,6 +128,7 @@ app.controller('wikiController', ['$scope', '$routeParams', '$route', '$sce', '$
             } else {
                 $location.path('/wiki/'+$routeParams.name+ '/edit');
             }
+            $rootScope.$broadcast('openArticle', $scope.content);
         });
     });
 
@@ -163,6 +165,38 @@ app.controller('wikiEditController', ['$scope', '$routeParams', '$location', fun
             });
         });
     };
+}]);
+
+app.controller('readOptionController', ['$scope', function($scope){
+    $scope.links = true;
+    $scope.wordCount = 0;
+    $scope.wordPerMinute = 0;
+
+    $scope.$on('openArticle', function(event, content){
+        var element = document.createElement('div');
+        element.innerHTML = content;
+        $scope.wordCount = element.innerText.split(' ').length;
+        $scope.wordPerMinute = parseInt($scope.wordCount / 200) + 1;
+    });
+
+    $scope.toggleLinks = function(){
+        var element = document.getElementById('wikiRender');
+        var items = element.getElementsByTagName('a');
+        for (var i=0;i<items.length;i++){
+            if ($scope.links){
+                items[i].className += ' light-black';
+            } else {
+                items[i].className = items[i].className.replace('light-black', '');
+            }
+        }
+        $scope.links = !$scope.links;
+    };
+
+    $scope.resizeFont = function(dir){
+        var element = document.getElementById('wikiRender');
+        var size = parseInt(element.style.fontSize.replace('px', ''));
+        element.style.fontSize = (size + dir) + 'px';
+    }
 }]);
 
 app.filter('safe', ['$sce', function($sce) {
