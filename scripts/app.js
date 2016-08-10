@@ -167,6 +167,14 @@ app.controller('wikiEditController', ['$scope', '$routeParams', '$location', fun
     };
 }]);
 
+app.controller('notesController', ['$scope', function($scope){
+    $scope.notes = [];
+
+    $scope.add = function(){
+        $scope.notes.push({msg:'hola'});
+    }
+}]);
+
 app.controller('readOptionController', ['$scope', function($scope){
     $scope.links = true;
     $scope.wordCount = 0;
